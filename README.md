@@ -18,15 +18,36 @@ If you have not defined a bean of type CacheManager or a CacheResolver named cac
 
 ### Project Descriptions :
 please see application.properties files in resources folder and select a active profile "dev" or "com" to run project. you can check test methods too.  
-steps before run project:
-1. install redis server (Redis-x64-3.2.100) from "requirements" directory in project
-2. install redis desktop manager to view redis cached data (redis-desktop-manager-0.9.3.817) from "requirements" directory in project
-3. set redis password:
-  - Open Run Window by Winkey + R. Type services.msc. Search Redis service. Click stop  
-  - edit your C:\Program Files\Redis\redis.windows.conf and C:\Program Files\Redis\redis.windows-service.conf file with administrator user, find this line
+oracle configuration steps:
+- download oracle 18 express from : https://drive.google.com/file/d/1sdMKUH9eXfYFyRRYMcYG2-rDc2Nav5Yz/view
+- install oracle and in the setup wizard set password:"123456" for "sys" and "system" users
+- in windows environment add these variables:
+    - ORACLE_HOME = C:\app\MyUser\product\18.0.0\dbhomeXE
+    - ORACLE_SID = XE
+- execute "C:\app\MyUser\product\18.0.0\dbhomeXE\bin\sqlplus.exe" and enter with "system" and "123456" and run these commands to create motaharinia schema with 123456 password:
+    - ALTER SESSION SET CONTAINER = XEPDB1;
+    - CREATE BIGFILE TABLESPACE tbsmot_perm_01 DATAFILE 'tbsmot_perm_01.dat' SIZE 20M AUTOEXTEND ON;
+    - CREATE TEMPORARY TABLESPACE tbsmot_temp_01 TEMPFILE 'tbsmot_temp_01.dbf' SIZE 20M AUTOEXTEND ON;
+    - CREATE USER motaharinia IDENTIFIED BY 123456 DEFAULT TABLESPACE tbsmot_perm_01 TEMPORARY TABLESPACE tbsmot_temp_01 QUOTA 20M on tbsmot_perm_01;
+    - GRANT create session TO motaharinia;
+    - GRANT create table TO motaharinia;
+    - GRANT create view TO motaharinia;
+    - GRANT create any trigger TO motaharinia;
+    - GRANT create any procedure TO motaharinia;
+    - GRANT create sequence TO motaharinia;
+    - GRANT create synonym TO motaharinia;
+    - GRANT connect TO motaharinia;
+    - alter user motaharinia default role all;
+
+redis configuration steps:
+- install redis server (Redis-x64-3.2.100) from "requirements" directory in project
+- install redis desktop manager to view redis cached data (redis-desktop-manager-0.9.3.817) from "requirements" directory in project
+- set redis password:
+    - Open Run Window by Winkey + R. Type services.msc. Search Redis service. Click stop  
+    - edit your C:\Program Files\Redis\redis.windows.conf and C:\Program Files\Redis\redis.windows-service.conf file with administrator user, find this line
 `# requirepass foobared
 `Then uncomment it and change foobared to your password (Important: please check that requirepass doesnt have blank space before it).
- - Open Run Window by Winkey + R. Type services.msc. Search Redis service. Click start
+    - Open Run Window by Winkey + R. Type services.msc. Search Redis service. Click start
     
 ### IntellliJ IDEA Configurations :
 - IntelijIDEA: Help -> Edit Custom Vm Options -> add these two line:
